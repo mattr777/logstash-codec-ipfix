@@ -7,3 +7,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/.idea
+/.rspec
+/.travis.yml
+/logstash-codec-ipfix-0.1.0.gem
