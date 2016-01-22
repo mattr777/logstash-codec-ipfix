@@ -6,7 +6,30 @@ require 'logstash/namespace'
 
 class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
   config_name 'ipfix'
+
+  # template cache TTL (minutes)
+  config :cache_ttl, :validate => :number, :default => 4000
+
+  # Specify into what field you want the IPFIX data.
   config :target, :validate => :string, :default => "ipfix"
+
+  # Override YAML file containing IPFIX information elements
+  # See <http://www.iana.org/assignments/ipfix/ipfix.xhtml> for IANA definitions
+  #
+  # Each field is defined like so:
+  #
+  #    ---
+  #    id:
+  #    - default length in bytes
+  #    - :name
+  #    id:
+  #    - :uintN or :ip4_addr or :ip6_addr or :mac_addr or :string
+  #    - :name
+  #    id:
+  #    - :skip
+  #
+  # See <https://github.com/logstash-plugins/logstash-codec-netflow/blob/master/lib/logstash/codecs/netflow/netflow.yaml> for the base set.
+  config :definitions, :validate => :path
 
   public
   def initialize(params = {})
@@ -16,6 +39,26 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
 
   public
   def register
+    @templates = Vash.new()
+
+    # Path to default field definitions
+    filename = ::File.expand_path('IPFIX/ipfix.yaml', ::File.dirname(__FILE__))
+
+    begin
+      @fields = YAML.load_file(filename)
+    rescue Exception => e
+      raise "#{self.class.name}: Bad syntax in definitions file #{filename}"
+    end
+
+    # Allow the user to augment/override/rename the supported fields
+    if @definitions
+      raise "#{self.class.name}: definitions file #{@definitions} does not exists" unless File.exists?(@definitions)
+      begin
+        @fields.merge!(YAML.load_file(@definitions))
+      rescue Exception => e
+        raise "#{self.class.name}: Bad syntax in definitions file #{@definitions}"
+      end
+    end
   end # def register
 
   public
