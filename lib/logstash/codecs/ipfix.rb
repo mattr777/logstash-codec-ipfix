@@ -89,7 +89,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
           catch (:field) do
             fields = []
             template.fields.each do |field|
-              entry = netflow_field_for(field.field_type, field.field_length)
+              entry = ipfix_field_for(field.field_type, field.field_length)
               throw :field unless entry
               fields += entry
             end
@@ -106,7 +106,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
           catch (:field) do
             fields = []
             template.option_fields.each do |field|
-              entry = netflow_field_for(field.field_type, field.field_length)
+              entry = ipfix_field_for(field.field_type, field.field_length)
               throw :field unless entry
               fields += entry
             end
@@ -169,7 +169,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
     ('uint' + (((length > 0) ? length : default) * 8).to_s).to_sym
   end # def uint_field
 
-  def netflow_field_for(type, length)
+  def ipfix_field_for(type, length)
     if @fields.include?(type)
       field = @fields[type]
       if field.is_a?(Array)
@@ -193,8 +193,18 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
         nil
       end
     else
-      @logger.warn('Unsupported field', :type => type, :length => length)
-      nil
+      if (type & 0x8000) == 0x8000
+        field = []
+        field[0] = uint_field(length, 4)
+        field[1] = ('enterprise_field_'+(type & 0xFFF).to_s).to_sym
+
+        @logger.debug? and @logger.debug('Definition complete', :field => field)
+
+        [field]
+      else
+        @logger.warn('Unsupported field', :type => type, :length => length)
+        nil
+      end
     end
   end # def netflow_field_for
 end # class LogStash::Codecs::IPFIX

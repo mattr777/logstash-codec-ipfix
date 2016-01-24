@@ -1,28 +1,28 @@
 ---
 1:
 - 4
-- :in_bytes
+- :octet_delta_count
 2:
 - 4
-- :in_pkts
+- :packet_delta_count
 3:
 - 4
-- :flows
+- :delta_flow_count
 4:
 - :uint8
-- :protocol
+- :protocol_identifier
 5:
 - :uint8
-- :src_tos
+- :ip_class_of_service
 6:
 - :uint8
-- :tcp_flags
+- :tcp_control_bits
 7:
 - :uint16
-- :l4_src_port
+- :source_transport_port
 8:
 - :ip4_addr
-- :ipv4_src_addr
+- :source_ipv4_address
 9:
 - :uint8
 - :src_mask
@@ -217,3 +217,10 @@
 149:
 - 2
 - :observation_domain_id
+152:
+- 8
+- :flow_start_milliseconds
+153:
+- 8
+- :flow_stop_milliseconds
+
