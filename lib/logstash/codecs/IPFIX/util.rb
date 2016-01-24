@@ -2,31 +2,120 @@
 require 'bindata'
 require 'ipaddr'
 
-class IPFIXMessageHeader < BinData::Record
+class IP4Addr < BinData::Primitive
+  endian :big
+  uint32 :storage
+
+  def set(val)
+    ip = IPAddr.new(val)
+    if ! ip.ipv4?
+      raise ArgumentError, "invalid IPv4 address '#{val}'"
+    end
+    self.storage = ip.to_i
+  end
+
+  def get
+    IPAddr.new_ntoh([self.storage].pack('N')).to_s
+  end
+end
+
+class IP6Addr < BinData::Primitive
+  endian  :big
+  uint128 :storage
+
+  def set(val)
+    ip = IPAddr.new(val)
+    if ! ip.ipv6?
+      raise ArgumentError, "invalid IPv6 address `#{val}'"
+    end
+    self.storage = ip.to_i
+  end
+
+  def get
+    IPAddr.new_ntoh((0..7).map { |i|
+      (self.storage >> (112 - 16 * i)) & 0xffff
+    }.pack('n8')).to_s
+  end
+end
+
+class MacAddr < BinData::Primitive
+  array :bytes, :type => :uint8, :initial_length => 6
+
+  def set(val)
+    ints = val.split(/:/).collect { |int| int.to_i(16) }
+    self.bytes = ints
+  end
+
+  def get
+    self.bytes.collect { |byte| byte.to_s(16) }.join(":")
+  end
+end
+
+class Header < BinData::Record
   endian :big
   uint16 :version_number
-  uint16 :length_in_bytes
+end
+
+class IANAField < BinData::Record
+  endian :big
+end
+
+class EnterpriseField < BinData::Record
+  endian :big
+  uint32 :enterprise_number
+end
+
+class TemplateFlowset < BinData::Record
+  endian :big
+  array  :templates, :read_until => lambda { array.num_bytes == set_length_in_bytes - 4 } do
+    uint16 :template_id
+    uint16 :field_count
+    array  :fields, :initial_length => :field_count do
+      uint16 :field_type
+      uint16 :field_length
+      choice :information_element, :selection => lambda { (field_type & 0x8000) == 0x8000 } do
+        IANAField false
+        EnterpriseField   true
+      end
+    end
+  end
+end
+
+class OptionFlowset < BinData::Record
+  endian :big
+  array  :templates, :read_until => lambda { set_length_in_bytes - 4 - array.num_bytes <= 2 } do
+    uint16 :template_id
+    uint16 :scope_length
+    uint16 :option_length
+    array  :scope_fields, :initial_length => lambda { scope_length / 4 } do
+      uint16 :field_type
+      uint16 :field_length
+    end
+    array  :option_fields, :initial_length => lambda { option_length / 4 } do
+      uint16 :field_type
+      uint16 :field_length
+    end
+  end
+  skip   :length => lambda { templates.length.odd? ? 2 : 0 }
+end
+
+
+class IPFIXSet < BinData::Record
+  endian :big
+  uint16 :version_number
+  uint16 :message_length_in_bytes
   uint32 :export_time
   uint32 :sequence_number
   uint32 :observation_domain_id
-end
-
-class IPFIXSetHeader < BinData::Record
-  endian :big
-  uint16 :set_id
-  uint16 :length_in_bytes
-end
-
-class IPFIXTemplateRecordHeader < BinData::Record
-  endian :big
-  uint16 :template_id
-  uint16 :field_count
-end
-
-class IPFIXFieldSpecifier < BinData::Record
-  endian :big
-  uint16 :information_element_id
-  uint16 :field_length
+  array  :records, :read_until => :eof do
+    uint16 :set_id
+    uint16 :set_length_in_bytes
+    choice :flowset_data, :selection => :set_id do
+      TemplateFlowset 2
+      OptionFlowset   3
+      string           :default, :read_length => lambda { set_length_in_bytes - 4 }
+    end
+  end
 end
 
 # https://gist.github.com/joshaven/184837

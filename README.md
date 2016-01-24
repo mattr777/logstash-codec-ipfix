@@ -1,8 +1,7 @@
 # Logstash::Codec::IPFIX
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/logstash/codec/IPFIX`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This codec will decode IPFIX version 10 messages for logstash.
+It was developed by modifying the logstash-codec-netflow code.
 
 ## Installation
 
