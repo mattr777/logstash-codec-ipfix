@@ -1,12 +1,12 @@
 ---
 1:
-- 4
+- :uint64
 - :octet_delta_count
 2:
-- 4
+- :uint64
 - :packet_delta_count
 3:
-- 4
+- :uint64
 - :delta_flow_count
 4:
 - :uint8
@@ -15,7 +15,7 @@
 - :uint8
 - :ip_class_of_service
 6:
-- :uint8
+- :uint16
 - :tcp_control_bits
 7:
 - :uint16
@@ -25,79 +25,79 @@
 - :source_ipv4_address
 9:
 - :uint8
-- :src_mask
+- :source_ipv4_prefix_length
 10:
-- 2
-- :input_snmp
+- :uint32
+- :ingress_interface
 11:
 - :uint16
-- :l4_dst_port
+- :destination_transport_port
 12:
 - :ip4_addr
-- :ipv4_dst_addr
+- :destination_ipv4_address
 13:
 - :uint8
-- :dst_mask
+- :destination_ipv4_prefix_length
 14:
-- 2
-- :output_snmp
+- :uint32
+- :egress_interface
 15:
 - :ip4_addr
-- :ipv4_next_hop
+- :ip_next_hop_ipv4_address
 16:
-- 2
-- :src_as
+- :uint32
+- :bgp_source_as_number
 17:
-- 2
-- :dst_as
+- :uint32
+- :bgp_destination_as_number
 18:
 - :ip4_addr
-- :bgp_ipv4_next_hop
+- :bgp_next_hop_ipv4_address
 19:
-- 4
-- :mul_dst_pkts
+- :uint64
+- :post_mcast_packet_delta_count
 20:
-- 4
-- :mul_dst_bytes
+- :uint64
+- :post_mcast_octet_delta_count
 21:
 - :uint32
-- :last_switched
+- :flow_end_sys_up_time
 22:
 - :uint32
-- :first_switched
+- :flow_start_sys_up_time
 23:
-- 4
-- :out_bytes
+- :uint64
+- :post_octet_delta_count
 24:
-- 4
-- :out_pkts
+- :uint64
+- :post_packet_delta_count
 25:
-- :uint16
-- :min_pkt_length
+- :uint64
+- :minimum_ip_total_length
 26:
-- :uint16
+- :uint64
 - :max_pkt_length
 27:
 - :ip6_addr
-- :ipv6_src_addr
+- :source_ipv6_address
 28:
 - :ip6_addr
-- :ipv6_dst_addr
+- :destination_ipv6_address
 29:
 - :uint8
-- :ipv6_src_mask
+- :source_ipv6_prefix_length
 30:
 - :uint8
-- :ipv6_dst_mask
+- :destination_ipv6_prefix_length
 31:
-- :uint24
-- :ipv6_flow_label
+- :uint32
+- :flow_label_ipv6
 32:
 - :uint16
-- :icmp_type
+- :icmp_type_code_ipv4
 33:
 - :uint8
-- :mul_igmp_type
+- :igmp_type
 34:
 - :uint32
 - :sampling_interval
@@ -109,7 +109,7 @@
 - :flow_active_timeout
 37:
 - :uint16
-- :flow_inactive_timeout
+- :flow_idle_timeout
 38:
 - :uint8
 - :engine_type
@@ -117,78 +117,80 @@
 - :uint8
 - :engine_id
 40:
-- 4
-- :total_bytes_exp
+- :uint64
+- :exported_octet_total_count
 41:
-- 4
-- :total_pkts_exp
+- :uint64
+- :exported_message_total_count
 42:
-- 4
-- :total_flows_exp
+- :uint64
+- :exported_flow_record_total_count
 43:
-- :skip
+- :ip4_addr
+- :ipv4_router_sc
 44:
 - :ip4_addr
-- :ipv4_src_prefix
+- :source_ipv4_prefix
 45:
 - :ip4_addr
-- :ipv4_dst_prefix
+- :destination_ipv4_prefix
 46:
 - :uint8
 - :mpls_top_label_type
 47:
-- :uint32
-- :mpls_top_label_ip_addr
+- :ip4_addr
+- :mpls_top_label_ipv4_address
 48:
-- 4
-- :flow_sampler_id
+- :uint8
+- :sampler_id
 49:
 - :uint8
-- :flow_sampler_mode
+- :sampler_mode
 50:
 - :uint32
-- :flow_sampler_random_interval
+- :sampler_random_interval
 51:
-- :skip
+- :uint8
+- :class_id
 52:
 - :uint8
-- :min_ttl
+- :minimum_ttl
 53:
 - :uint8
-- :max_ttl
+- :maximum_ttl
 54:
-- :uint16
-- :ipv4_ident
+- :uint32
+- :fragment_identification
 55:
 - :uint8
-- :dst_tos
+- :post_ip_class_of_service
 56:
 - :mac_addr
-- :in_src_max
+- :source_mac_address
 57:
 - :mac_addr
-- :out_dst_max
+- :post_destination_mac_address
 58:
 - :uint16
-- :src_vlan
+- :vlan_id
 59:
 - :uint16
-- :dst_vlan
+- :post_vlan_id
 60:
 - :uint8
-- :ip_protocol_version
+- :ip_version
 61:
 - :uint8
-- :direction
+- :flow_direction
 62:
 - :ip6_addr
-- :ipv6_next_hop
+- :ip_next_hop_ipv6_address
 63:
 - :ip6_addr
-- :bgp_ipv6_next_hop
+- :bgp_next_hop_ipv6_address
 64:
 - :uint32
-- :ipv6_option_headers
+- :ipv6_extension_headers
 65:
 - :skip
 66:
@@ -201,26 +203,224 @@
 - :skip
 80:
 - :mac_addr
-- :in_dst_mac
+- :destination_mac_address
 81:
 - :mac_addr
-- :out_src_mac
+- :post_source_mac_address
 82:
 - :string
-- :if_name
+- :interface_name
 83:
 - :string
-- :if_desc
+- :interface_description
+84:
+- :string
+- :sampler_name
+85:
+- :uint64
+- :octet_total_count
+86:
+- :uint64
+- :packet_total_count
+87:
+- :uint32
+- :flags_and_sampler_id
+88:
+- :uint16
+- :fragment_offset
+89:
+- :uint32
+- :forwarding_status
+91:
+- :uint8
+- :mpls_top_label_prefix_length
+92:
+- :uint32
+- :src_traffic_index
+93:
+- :uint32
+- :dst_traffic_index
+94:
+- :string
+- :application_description
+96:
+- :string
+- :application_name
+97:
+- :skip
+98:
+- :uint8
+- :post_ip_diff_serv_code_point
+99:
+- :uint32
+- :multicast_replication_factor
+100:
+- :string
+- :class_name
+101:
+- :uint8
+- :classification_engine_id
+102:
+- :uin16
+- :layer2_packet_section_offset
+103:
+- :uint16
+- :layer2_packet_section_size
+105:
+- :skip
+106:
+- :skip
+107:
+- :skip
+108:
+- :skip
+109:
+- :skip
+110:
+- :skip
+111:
+- :skip
+112:
+- :skip
+113:
+- :skip
+114:
+- :skip
+115:
+- :skip
+116:
+- :skip
+117:
+- :skip
+118:
+- :skip
+119:
+- :skip
+120:
+- :skip
+121:
+- :skip
+122:
+- :skip
+123:
+- :skip
+124:
+- :skip
+125:
+- :skip
+126:
+- :skip
+127:
+- :skip
+128:
+- :uint32
+- :bgp_next_adjacent_as_number
+129:
+- :uint32
+- :bgp_prev_adjacent_as_number
+130:
+- :ip4_addr
+- :exporter_ipv4_address
+131:
+- :ip6_addr
+- :exporter_ipv6_address
+132:
+- :uint64
+- :dropped_octet_delta_count
+133:
+- :uint64
+- :dropped_packet_delta_count
+134:
+- :uint64
+- :dropped_octet_total_count
+135:
+- :uint64
+- :dropped_packet_total_count
+136:
+- :uint8
+- :flow_end_reason
+137:
+- :uint64
+- :common_properties_id
+138:
+- :uint64
+- :observation_point_id
+139:
+- :uint16
+- :icmp_type_code_ipv6
+140:
+- :ip6_addr
+- :mpls_top_label_ipv6_address
+141:
+- :uint32
+- :line_card_id
+142:
+- :uint32
+- :port_id
+143:
+- :uint32
+- :metering_process_id
+144:
+- :uint32
+- :exporting_process_id
+145:
+- :uint16
+- :template_id
+146:
+- :uint8
+- :wlan_channel_id
+147:
+- :string
+- :wlan_ssid
 148:
-- 4
+- :uint64
 - :flow_id
 149:
-- 2
+- :uint32
 - :observation_domain_id
+150:
+- :uint32
+- :flow_start_seconds
+151:
+- :uint32
+- :flow_end_seconds
 152:
-- 8
+- :uint64
 - :flow_start_milliseconds
 153:
-- 8
-- :flow_stop_milliseconds
+- :uint64
+- :flow_end_milliseconds
+154:
+- :uint64
+- :flow_start_microseconds
+155:
+- :uint64
+- :flow_end_microseconds
+156:
+- :uint64
+- :flow_start_nanoseconds
+157:
+- :uint64
+- :flow_end_nanoseconds
+450:
+- :string
+- :mib_context_name
+451:
+- :string
+- :mib_object_name
+452:
+- :string
+- :mib_object_description
+453:
+- :string
+- :mib_object_syntax
+454:
+- :string
+- :mib_module_name
+455:
+- :string
+- :mobile_imsi
+456:
+- :string
+- :mobile_msisdn
 

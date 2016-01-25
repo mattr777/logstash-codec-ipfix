@@ -3,7 +3,6 @@ require 'logstash/codecs/base'
 require 'logstash/codecs/IPFIX/version'
 require 'logstash/codecs/IPFIX/util'
 require 'logstash/namespace'
-require 'logstash/codecs/IPFIX/util'
 
 class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
   config_name 'ipfix'
@@ -32,7 +31,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
   # See <https://github.com/logstash-plugins/logstash-codec-netflow/blob/master/lib/logstash/codecs/netflow/netflow.yaml> for the base set.
   config :definitions, :validate => :path
 
-  IPFIX10_FIELDS = %w{ sequence_number observation_domain_id }
+  IPFIX10_FIELDS = %w{ export_time sequence_number observation_domain_id }
 
   public
   def initialize(params = {})
@@ -141,7 +140,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
 
         records.each do |r|
           event = {
-              LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(flowset.export_time),
+              LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(Time.now.to_i),
               @target => {}
           }
 
