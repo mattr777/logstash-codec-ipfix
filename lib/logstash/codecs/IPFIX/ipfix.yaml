@@ -402,6 +402,135 @@
 157:
 - :uint64
 - :flow_end_nanoseconds
+158:
+- :uint32
+- :flow_start_delta_microseconds
+159:
+- :uint32
+- :flow_end_delta_microseconds
+160:
+- :uint64
+- :system_init_time_milliseconds
+161:
+- :uint32
+- :flow_duration_milliseconds
+162:
+- :uint32
+- :flow_duration_microseconds
+163:
+- :uint64
+- :observed_flow_total_count
+164:
+- :uint64
+- :ignored_packet_total_count
+165:
+- :uint64
+- :ignored_octet_total_count
+166:
+- :uint64
+- :not_sent_flow_total_count
+167:
+- :uint64
+- :not_sent_packet_total_count
+168:
+- :uint64
+- :not_sent_octet_total_count
+169:
+- :ip6_addr
+- :destination_ipv6_prefix
+170:
+- :ip6_addr
+- :source_ipv6_prefix
+171:
+- :uint64
+- :post_octet_total_count
+172:
+- :uint64
+- :post_packet_total_count
+173:
+- :uint64
+- :flow_key_indicator
+174:
+- :uint64
+- :post_mcast_packet_total_count
+175:
+- :uint64
+- :post_mcast_octet_total_count
+176:
+- :uint8
+- :icmp_type_ipv4
+177:
+- :uint8
+- :icmp_code_ipv4
+178:
+- :uint8
+- :icmp_type_ipv6
+179:
+- :uint8
+- :icmp_code_ipv6
+180:
+- :uint16
+- :udp_source_port
+181:
+- :uint16
+- :udp_destination_port
+182:
+- :uint16
+- :tcp_source_port
+183:
+- :uint16
+- :tcp_destination_port
+184:
+- :uint32
+- :tcp_sequence_number
+185:
+- :uint32
+- :tcp_acknowledgement_number
+186:
+- :uint16
+- :tcp_window_size
+187:
+- :uint16
+- :tcp_urgent_pointer
+188:
+- :uint8
+- :tcp_header_length
+189:
+- :uint8
+- :ip_header_length
+190:
+- :uint16
+- :total_length_ipv4
+191:
+- :uint16
+- :payload_length_ipv6
+192:
+- :uint8
+- :ip_ttl
+193:
+- :uint8
+- :next_header_ipv6
+194:
+- :uint32
+- :mpls_payload_length
+195:
+- :uint8
+- :ip_diff_serv_code_point
+196:
+- :uint8
+- :ip_precedence
+197:
+- :uint8
+- :fragment_flags
+198:
+- :uint64
+- :octet_delta_sum_of_squares
+199:
+- :uint64
+- :octet_total_sum_of_squares
+200:
+- :uint8
+- :mpls_top_label_ttl
 450:
 - :string
 - :mib_context_name
