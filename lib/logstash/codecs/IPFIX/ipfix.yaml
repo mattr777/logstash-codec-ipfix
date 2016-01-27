@@ -531,6 +531,649 @@
 200:
 - :uint8
 - :mpls_top_label_ttl
+201:
+- :uint32
+- :mpls_label_stack_length
+202:
+- :uint32
+- :mpls_label_stack_depth
+203:
+- :uint8
+- :mpls_top_label_exp
+204:
+- :uint32
+- :ip_payload_length
+205:
+- :uint16
+- :udp_message_length
+206:
+- :uint8
+- :is_multicast
+207:
+- :uint8
+- :ipv4_ih_l
+208:
+- :uint32
+- :ipv4_options
+209:
+- :uint64
+- :tcp_options
+211:
+-:ip4_addr
+- :collector_ipv4_address
+212:
+- :ip6_addr
+- :collector_ipv6_address
+213:
+- :uint32
+- :export_interface
+214:
+- :uint8
+- :export_protocol_version
+215:
+- :uint8
+- :export_transport_protocol
+216:
+- :uint16
+- :collector_transport_port
+217:
+- :uint16
+- :exporter_transport_port
+218:
+- :uint64
+- :tcp_syn_total_count
+219:
+- :uint64
+- :tcp_fin_total_count
+220:
+- :uint64
+- :tcp_rst_total_count
+221:
+- :uint64
+- :tcp_psh_total_count
+222:
+- :uint64
+- :tcp_ack_total_count
+223:
+- :uint64
+- :tcp_urg_total_count
+224:
+- :uint64
+- :ip_total_length
+225:
+- :ip4_addr
+- :post_nat_source_ipv4_address
+226:
+- :ip4_addr
+- :post_nat_destination_ipv4_address
+227:
+- :uint16
+- :post_napt_source_transport_port
+228:
+- :uint16
+- :post_napt_destination_transport_port
+229:
+- :uint8
+- :nat_originating_address_realm
+230:
+- :uint8
+- :nat_event
+231:
+- :uint64
+- :initiator_octets
+232:
+- :uint64
+- :responder_octets
+233:
+- :uint8
+- :firewall_event
+234:
+- :uint32
+- :ingress_vrfid
+235:
+- :uint32
+- :egress_vrfid
+236:
+- :string
+- :vr_fname
+237:
+- :uint8
+- :post_mpls_top_label_exp
+238:
+- :uint16
+- :tcp_window_scale
+239:
+- :uint8
+- :biflow_direction
+240:
+- :uint8
+- :ethernet_header_length
+241:
+- :uint16
+- :ethernet_payload_length
+242:
+- :uint16
+- :ethernet_total_length
+243:
+- :uint16
+- :dot1q_vlan_id
+244:
+- :uint8
+- :dot1q_priority
+245:
+- :uint16
+- :dot1q_customer_vlan_id
+246:
+- :uint8
+- :dot1q_customer_priority
+247:
+- :string
+- :metro_evc_id
+248:
+- :uint8
+- :metro_evc_type
+249:
+- :uint32
+- :pseudo_wire_id
+250:
+- :uint16
+- :pseudo_wire_type
+251:
+- :uint32
+- :pseudo_wire_control_word
+252:
+- :uint32
+- :ingress_physical_interface
+253:
+- :uint32
+- :egress_physical_interface
+254:
+- :uint16
+- :post_dot1q_vlan_id
+255:
+- :uint16
+- :post_dot1q_customer_vlan_id
+256:
+- :uint16
+- :ethernet_type
+257:
+- :uint8
+- :post_ip_precedence
+258:
+- :uint64
+- :collection_time_milliseconds
+259:
+- :uint16
+- :export_sctp_stream_id
+260:
+- :uint32
+- :max_export_seconds
+261:
+- :uint32
+- :max_flow_end_seconds
+263:
+- :uint8
+- :message_scope
+264:
+- :uint32
+- :min_export_seconds
+265:
+- :uint32
+- :min_flow_start_seconds
+267:
+- :uint8
+- :session_scope
+268:
+- :uint64
+- :max_flow_end_microseconds
+269:
+- :uint64
+- :max_flow_end_milliseconds
+270:
+- :uint64
+- :max_flow_end_nanoseconds
+271:
+- :uint64
+- :min_flow_start_microseconds
+272:
+- :uint64
+- :min_flow_start_milliseconds
+273:
+- :uint64
+- :min_flow_start_nanoseconds
+277:
+- :uint8
+- :observation_point_type
+278:
+- :uint32
+- :new_connection_delta_count
+279:
+- :uint64
+- :connection_sum_duration_seconds
+280:
+- :uint64
+- :connection_transaction_id
+281:
+- :ip6_addr
+- :post_nat_source_ipv6_address
+282:
+- :ip6_addr
+- :post_nat_destination_ipv6_address
+283:
+- :uint32
+- :nat_pool_id
+284:
+- :string
+- :nat_pool_name
+285:
+- :uint16
+- :anonymization_flags
+286:
+- :uint16
+- :anonymization_technique
+287:
+- :uint16
+- :information_element_index
+288:
+- :string
+- :p2p_technology
+289:
+- :string
+- :tunnel_technology
+290:
+- :string
+- :encrypted_technology
+294:
+- :uint8
+- :bgp_validity_state
+295:
+- :uint32
+- :ip_sec_spi
+296:
+- :uint32
+- :gre_key
+297:
+- :uint8
+- :nat_type
+298:
+- :uint64
+- :initiator_packets
+299:
+- :uint64
+- :responder_packets
+300:
+- :string
+- :observation_domain_name
+301:
+- :uint64
+- :selection_sequence_id
+302:
+- :uint64
+- :selector_id
+303:
+- :uint16
+- :information_element_id
+304:
+- :uint16
+- :selector_algorithm
+305:
+- :uint32
+- :sampling_packet_interval
+306:
+- :uint32
+- :sampling_packet_space
+307:
+- :uint32
+- :sampling_time_interval
+308:
+- :uint32
+- :sampling_time_space
+309:
+- :uint32
+- :sampling_size
+310:
+- :uint32
+- :sampling_population
+312:
+- :uint16
+- :data_link_frame_size
+318:
+- :uint64
+- :selector_id_total_pkts_observed
+319:
+- :uint64
+- :selector_id_total_pkts_selected
+322:
+- :uint32
+- :observation_time_seconds
+323:
+- :uint64
+- :observation_time_milliseconds
+324:
+- :uint64
+- :observation_time_microseconds
+325:
+- :uint64
+- :observation_time_nanoseconds
+326:
+- :uint64
+- :digest_hash_value
+327:
+- :uint64
+- :hash_ip_payload_offset
+328:
+- :uint64
+- :hash_ip_payload_size
+329:
+- :uint64
+- :hash_output_range_min
+330:
+- :uint64
+- :hash_output_range_max
+331:
+- :uint64
+- :hash_selected_range_min
+332:
+- :uint64
+- :hash_selected_range_max
+334:
+- :uint64
+- :hash_initialiser_value
+335:
+- :string
+- :selector_name
+339:
+- :uint8
+- :information_element_data_type
+340:
+- :string
+- :information_element_description
+341:
+- :string
+- :information_element_name
+342:
+- :uint64
+- :information_element_range_begin
+343:
+- :uint64
+- :information_element_range_end
+344:
+- :uint8
+- :information_element_semantics
+345:
+- :uint16
+- :information_element_units
+346:
+- :uint32
+- :private_enterprise_number
+348:
+- :string
+- :virtual_station_interface_name
+350:
+- :string
+- :virtual_station_name
+351:
+- :uint64
+- :layer2_segment_id
+352:
+- :uint64
+- :layer2_octet_delta_count
+353:
+- :uint64
+- :layer2_octet_total_count
+354:
+- :uint64
+- :ingress_unicast_packet_total_count
+355:
+- :uint64
+- :ingress_multicast_packet_total_count
+356:
+- :uint64
+- :ingress_broadcast_packet_total_count
+357:
+- :uint64
+- :egress_unicast_packet_total_count
+358:
+- :uint64
+- :egress_broadcast_packet_total_count
+359:
+- :uint64
+- :monitoring_interval_start_milli_seconds
+360:
+- :uint64
+- :monitoring_interval_end_milli_seconds
+361:
+- :uint16
+- :port_range_start
+362:
+- :uint16
+- :port_range_end
+363:
+- :uint16
+- :port_range_step_size
+364:
+- :uint16
+- :port_range_num_ports
+365:
+- :mac_addr
+- :sta_mac_address
+366:
+- :ip4_addr
+- :sta_ipv4_address
+367:
+- :mac_addr
+- :wtp_mac_address
+368:
+- :uint32
+- :ingress_interface_type
+369:
+- :uint32
+- :egress_interface_type
+370:
+- :uint16
+- :rtp_sequence_number
+371:
+- :string
+- :user_name
+372:
+- :string
+- :application_category_name
+373:
+- :string
+- :application_sub_category_name
+374:
+- :string
+- :application_group_name
+375:
+- :uint64
+- :original_flows_present
+376:
+- :uint64
+- :original_flows_initiated
+377:
+- :uint64
+- :original_flows_completed
+378:
+- :uint64
+- :distinct_count_of_source_ip_address
+379:
+- :uint64
+- :distinct_count_of_destination_ip_address
+380:
+- :uint32
+- :distinct_count_of_source_ipv4_address
+381:
+- :uint32
+- :distinct_count_of_destination_ipv4_address
+382:
+- :uint64
+- :distinct_count_of_source_ipv6_address
+383:
+- :uint64
+- :distinct_count_of_destination_ipv6_address
+384:
+- :uint8
+- :value_distribution_method
+385:
+- :uint32
+- :rfc3550_jitter_milliseconds
+386:
+- :uint32
+- :rfc3550_jitter_microseconds
+387:
+- :uint32
+- :rfc3550_jitter_nanoseconds
+390:
+- :uint16
+- :flow_selector_algorithm
+391:
+- :uint64
+- :flow_selected_octet_delta_count
+392:
+- :uint64
+- :flow_selected_packet_delta_count
+393:
+- :uint64
+- :flow_selected_flow_delta_count
+394:
+- :uint64
+- :selector_i_d_total_flows_observed
+395:
+- :uint64
+- :selector_i_d_total_flows_selected
+396:
+- :uint64
+- :sampling_flow_interval
+397:
+- :uint64
+- :sampling_flow_spacing
+398:
+- :uint64
+- :flow_sampling_time_interval
+399:
+- :uint64
+- :flow_sampling_time_spacing
+400:
+- :uint16
+- :hash_flow_domain
+401:
+- :uint64
+- :transport_octet_delta_count
+402:
+- :uint64
+- :transport_packet_delta_count
+403:
+- :ip4_addr
+- :original_exporter_ipv4_address
+404:
+- :ip6_addr
+- :original_exporter_ipv6_address
+405:
+- :uint32
+- :original_observation_domain_id
+406:
+- :uint32
+- :intermediate_process_id
+407:
+- :uint64
+- :ignored_data_record_total_count
+408:
+- :uint16
+- :data_link_frame_type
+409:
+- :uint16
+- :section_offset
+410:
+- :uint16
+- :section_exported_octets
+412:
+- :uint32
+- :dot1q_service_instance_id
+413:
+- :uint8
+- :dot1q_service_instance_priority
+414:
+- :mac_addr
+- :dot1q_customer_source_mac_address
+415:
+- :mac_addr
+- :dot1q_customer_destination_mac_address
+416:
+- :skip
+417:
+- :uint64
+- :post_layer2_octet_delta_count
+418:
+- :uint64
+- :post_mcast_layer2_octet_delta_count
+419:
+- :skip
+420:
+- :uint64
+- :post_layer2_octet_total_count
+421:
+- :uint64
+- :post_mcast_layer2_octet_total_count
+422:
+- :uint64
+- :minimum_layer2_total_length
+423:
+- :uint64
+- :maximum_layer2_total_length
+424:
+- :uint64
+- :dropped_layer2_octet_delta_count
+425:
+- :uint64
+- :dropped_layer2_octet_total_count
+426:
+- :uint64
+- :ignored_layer2_octet_total_count
+427:
+- :uint64
+- :not_sent_layer2_octet_total_count
+428:
+- :uint64
+- :layer2_octet_delta_sum_of_squares
+429:
+- :uint64
+- :layer2_octet_total_sum_of_squares
+430:
+- :uint64
+- :layer2_frame_delta_count
+431:
+- :uint64
+- :layer2_frame_total_count
+432:
+- :ip4_addr
+- :pseudo_wire_destination_ipv4_address
+433:
+- :uint64
+- :ignored_layer2_frame_total_count
+438:
+- :ip4_addr
+- :mib_object_value_ip_address
+439:
+- :uint64
+- :mib_object_value_counter
+440:
+- :uint32
+- :mib_object_value_gauge
+441:
+- :uint32
+- :mib_object_value_time_ticks
+442:
+- :uint64
+- :mib_object_value_unsigned
+446:
+- :uint32
+- :mib_sub_identifier
+447:
+- :uint64
+- :mib_index_indicator
+448:
+- :uint8
+- :mib_capture_time_semantics
 450:
 - :string
 - :mib_context_name
