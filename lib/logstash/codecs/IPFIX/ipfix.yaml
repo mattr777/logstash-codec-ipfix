@@ -559,7 +559,7 @@
 - :uint64
 - :tcp_options
 211:
--:ip4_addr
+- :ip4_addr
 - :collector_ipv4_address
 212:
 - :ip6_addr

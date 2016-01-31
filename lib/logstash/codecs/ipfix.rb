@@ -29,7 +29,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
   #    - :skip
   #
   # See <https://github.com/logstash-plugins/logstash-codec-netflow/blob/master/lib/logstash/codecs/netflow/netflow.yaml> for the base set.
-  config :definitions, :validate => :path
+  # config :definitions, :validate => :path, :default => 'enterprise.yaml'
 
   IPFIX10_FIELDS = %w{ export_time sequence_number observation_domain_id }
 
@@ -49,18 +49,20 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
     begin
       @fields = YAML.load_file(filename)
     rescue Exception => e
-      raise "#{self.class.name}: Bad syntax in definitions file #{filename}"
+      raise "#{self.class.name}: Bad syntax in definitions file #{filename}: " + e.message
     end
 
+    filename = ::File.expand_path('IPFIX/enterprise.yaml', ::File.dirname(__FILE__))
+
     # Allow the user to augment/override/rename the supported fields
-    if @definitions
-      raise "#{self.class.name}: definitions file #{@definitions} does not exists" unless File.exists?(@definitions)
-      begin
-        @fields.merge!(YAML.load_file(@definitions))
-      rescue Exception => e
-        raise "#{self.class.name}: Bad syntax in definitions file #{@definitions}"
-      end
+    # if @definitions
+    #   raise "#{self.class.name}: definitions file #{@definitions} does not exist" unless File.exists?(@definitions)
+    begin
+      @enterprise_fields = YAML.load_file(filename)
+    rescue Exception => e
+      raise "#{self.class.name}: Bad syntax in definitions file #{filename}"
     end
+    # end
   end # def register
 
   public
@@ -193,13 +195,19 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
       end
     else
       if (type & 0x8000) == 0x8000
-        field = []
-        field[0] = uint_field(length, 4)
-        field[1] = ('enterprise_field_'+(type & 0xFFF).to_s).to_sym
+        if @enterprise_fields.include?(type)
+          field = @enterprise_fields[type]
+          @logger.debug? and @logger.debug('Enterprise definition complete', :field => field)
 
-        @logger.debug? and @logger.debug('Definition complete', :field => field)
+        else
+          field = []
+          field[0] = uint_field(length, 4)
+          field[1] = ('enterprise_field_'+(type & 0xFFF).to_s).to_sym
 
-        [field]
+          @logger.debug? and @logger.debug('Definition complete', :field => field)
+
+          [field]
+        end
       else
         @logger.warn('Unsupported field', :type => type, :length => length)
         nil
