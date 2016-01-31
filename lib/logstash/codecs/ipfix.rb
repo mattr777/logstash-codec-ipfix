@@ -52,15 +52,18 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
       raise "#{self.class.name}: Bad syntax in definitions file #{filename}: " + e.message
     end
 
-    filename = ::File.expand_path('IPFIX/enterprise.yaml', ::File.dirname(__FILE__))
+    efilename = ::File.expand_path('IPFIX/enterprise.yaml', ::File.dirname(__FILE__))
 
     # Allow the user to augment/override/rename the supported fields
     # if @definitions
     #   raise "#{self.class.name}: definitions file #{@definitions} does not exist" unless File.exists?(@definitions)
     begin
-      @enterprise_fields = YAML.load_file(filename)
+      @enterprise_fields = YAML.load_file(efilename)
+      @enterprise_fields.each do |k|
+        @logger.debug? and @logger.debug('Enterprise field: ', :efield => k)
+      end
     rescue Exception => e
-      raise "#{self.class.name}: Bad syntax in definitions file #{filename}"
+      raise "#{self.class.name}: Bad syntax in definitions file #{efilename}: " + e.message
     end
     # end
   end # def register
@@ -195,10 +198,12 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
       end
     else
       if (type & 0x8000) == 0x8000
-        if @enterprise_fields.include?(type)
-          field = @enterprise_fields[type]
+        if @enterprise_fields.include?(type & 0xFFF)
+          field = @enterprise_fields[type & 0xFFF]
+
           @logger.debug? and @logger.debug('Enterprise definition complete', :field => field)
 
+          [field]
         else
           field = []
           field[0] = uint_field(length, 4)
