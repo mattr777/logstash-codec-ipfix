@@ -19,12 +19,24 @@ curl -XPUT localhost:9200/_template/logstash_ipfix -d '{
               "sequence_number": { "index": "not_analyzed", "type": "integer" },
               "observation_domain_id": { "index": "not_analyzed", "type": "integer" },
               "set_id": { "index": "not_analyzed", "type": "integer" },
-              "template_id": { "index": "not_analyzed", "type": "integer" },
-              "field_count": { "index": "not_analyzed", "type": "integer" },
-              "field1_id": { "index": "not_analyzed", "type": "integer" },
-              "field2_id": { "index": "not_analyzed", "type": "integer" },
-              "field3_id": { "index": "not_analyzed", "type": "integer" },
-              "field4_id": { "index": "not_analyzed", "type": "integer" }
+              "source_ipv4_address": { "index": "not_analyzed", "type": "ip" },
+              "destination_ipv4_address": { "index": "not_analyzed", "type": "ip" },
+              "source_ipv6_address": { "index": "not_analyzed", "type": "string" },
+              "destination_ipv6_address": { "index": "not_analyzed", "type": "string" },
+              "ingress_interface": { "index": "not_analyzed", "type": "integer" },
+              "packet_delta_count": { "index": "not_analyzed", "type": "integer" },
+              "octet_delta_count": { "index": "not_analyzed", "type": "integer" },
+              "flow_start_milliseconds": { "index": "not_analyzed", "type": "integer" },
+              "flow_end_milliseconds": { "index": "not_analyzed", "type": "integer" },
+              "source_transport_port": { "index": "not_analyzed", "type": "integer" },
+              "destination_transport_port": { "index": "not_analyzed", "type": "integer" },
+              "ip_class_of_service": { "index": "not_analyzed", "type": "integer" },
+              "vlan_id": { "index": "not_analyzed", "type": "integer" },
+              "flow_id": { "index": "not_analyzed", "type": "integer" },
+              "server_indicator": { "index": "not_analyzed", "type": "boolean" },
+              "application_id": { "index": "not_analyzed", "type": "integer" },
+              "client_site": { "index": "not_analyzed", "type": "integer" },
+              "server_site": { "index": "not_analyzed", "type": "integer" }
             }
           }
         }
