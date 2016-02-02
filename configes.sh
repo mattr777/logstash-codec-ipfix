@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 curl -XPUT localhost:9200/_template/logstash_ipfix -d '{
-    "template" : "logstash-ipfix-*",
+    "template" : "logstash-ipfix3-*",
     "settings": {
-      "index.refresh_interval": "15s"
+      "index.refresh_interval": "5s"
     },
     "mappings" : {
-      "_default_" : {
+      "logs" : {
         "_all" : {"enabled" : false},
         "properties" : {
           "@version": { "index": "analyzed", "type": "integer" },
@@ -24,15 +24,16 @@ curl -XPUT localhost:9200/_template/logstash_ipfix -d '{
               "source_ipv6_address": { "index": "not_analyzed", "type": "string" },
               "destination_ipv6_address": { "index": "not_analyzed", "type": "string" },
               "ingress_interface": { "index": "not_analyzed", "type": "integer" },
-              "packet_delta_count": { "index": "not_analyzed", "type": "integer" },
-              "octet_delta_count": { "index": "not_analyzed", "type": "integer" },
-              "flow_start_milliseconds": { "index": "not_analyzed", "type": "integer" },
-              "flow_end_milliseconds": { "index": "not_analyzed", "type": "integer" },
+              "packet_delta_count": { "index": "not_analyzed", "type": "long" },
+              "octet_delta_count": { "index": "not_analyzed", "type": "long" },
+              "flow_start_milliseconds": { "index": "not_analyzed", "type": "long" },
+              "flow_end_milliseconds": { "index": "not_analyzed", "type": "long" },
               "source_transport_port": { "index": "not_analyzed", "type": "integer" },
               "destination_transport_port": { "index": "not_analyzed", "type": "integer" },
-              "ip_class_of_service": { "index": "not_analyzed", "type": "integer" },
+              "protocol_identifier": { "index": "not_analyzed", "type": "short" },
+              "ip_class_of_service": { "index": "not_analyzed", "type": "short" },
               "vlan_id": { "index": "not_analyzed", "type": "integer" },
-              "flow_id": { "index": "not_analyzed", "type": "integer" },
+              "flow_id": { "index": "not_analyzed", "type": "long" },
               "server_indicator": { "index": "not_analyzed", "type": "boolean" },
               "application_id": { "index": "not_analyzed", "type": "integer" },
               "client_site": { "index": "not_analyzed", "type": "integer" },
