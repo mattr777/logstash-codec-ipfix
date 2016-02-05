@@ -48,8 +48,7 @@ curl -XPUT localhost:9200/_template/logstash_ipfix -d '{
 curl -XDELETE localhost:9200/_template/logstash_ipfix
 
 sudo /opt/logstash/bin/plugin install /home/mrichards/RubymineProjects/logstash-codec-ipfix/logstash-codec-ipfix-0.1.0.gem
-
-sudo tcpreplay -i lo short_template.pcap
+sudo /opt/logstash/bin/plugin uninstall logstash-codec-ipfix
 
 /opt/logstash$ sudo bin/logstash -f /etc/logstash/conf.d/logstash-ipfix.conf --debug
 

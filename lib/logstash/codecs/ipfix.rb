@@ -59,9 +59,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
     #   raise "#{self.class.name}: definitions file #{@definitions} does not exist" unless File.exists?(@definitions)
     begin
       @enterprise_fields = YAML.load_file(efilename)
-      @enterprise_fields.each do |k|
-        @logger.debug? and @logger.debug('Enterprise field: ', :efield => k)
-      end
+      @logger.debug? and @logger.debug('Enterprise fields: ', @enterprise_fields)
     rescue Exception => e
       raise "#{self.class.name}: Bad syntax in definitions file #{efilename}: " + e.message
     end
@@ -82,6 +80,10 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
     end
   end # def decode
 
+  # enterprise_field_for(type, length, enterprise_number)
+  # if (type & 0x8000) == 0x8000
+  #   if @enterprise_fields.include?(type & 0xFFF)
+
   private
   def decode_ipfix10(flowset, record)
     events = []
@@ -93,9 +95,15 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
           catch (:field) do
             fields = []
             template.fields.each do |field|
-              entry = ipfix_field_for(field.field_type, field.field_length)
-              throw :field unless entry
-              fields += entry
+              if (field.field_type & 0x8000) == 0x8000
+                entry = enterprise_field_for((field.field_type & 0xFFF), field.field_length, field.information_element.enterprise_number)
+                throw :field unless entry
+                fields += entry
+              else
+                entry = iana_field_for(field.field_type, field.field_length)
+                throw :field unless entry
+                fields += entry
+              end
             end
             # We get this far, we have a list of fields
             key = "#{flowset.observation_domain_id}|#{template.template_id}"
@@ -110,7 +118,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
           catch (:field) do
             fields = []
             template.option_fields.each do |field|
-              entry = ipfix_field_for(field.field_type, field.field_length)
+              entry = iana_field_for(field.field_type, field.field_length)
               throw :field unless entry
               fields += entry
             end
@@ -173,7 +181,7 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
     ('uint' + (((length > 0) ? length : default) * 8).to_s).to_sym
   end # def uint_field
 
-  def ipfix_field_for(type, length)
+  def iana_field_for(type, length)
     if @fields.include?(type)
       field = @fields[type]
       if field.is_a?(Array)
@@ -194,30 +202,56 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
         [field]
       else
         @logger.warn('Definition should be an array', :field => field)
-        nil
+        field = []
+        field[0] = uint_field(length, 4)
+        field[1] = ('unknown_field_'+type.to_s).to_sym
+
+        @logger.debug? and @logger.debug('Definition complete', :field => field)
+
+        [field]
       end
     else
-      if (type & 0x8000) == 0x8000
-        if @enterprise_fields.include?(type & 0xFFF)
-          field = @enterprise_fields[type & 0xFFF]
+      @logger.warn('Unknown field', :type => type, :length => length)
+      field = []
+      field[0] = uint_field(length, 4)
+      field[1] = ('unknown_field_'+type.to_s).to_sym
 
-          @logger.debug? and @logger.debug('Enterprise definition complete', :field => field)
+      @logger.debug? and @logger.debug('Definition complete', :field => field)
 
-          [field]
-        else
-          field = []
-          field[0] = uint_field(length, 4)
-          field[1] = ('enterprise_field_'+(type & 0xFFF).to_s).to_sym
-
-          @logger.debug? and @logger.debug('Definition complete', :field => field)
-
-          [field]
-        end
-      else
-        @logger.warn('Unsupported field', :type => type, :length => length)
-        nil
-      end
+      [field]
     end
-  end # def netflow_field_for
+  end
+
+  # def iana_field_for
+
+  def enterprise_field_for(type, length, enterprise_number)
+    if @enterprise_fields.include?(enterprise_number)
+      fields = @enterprise_fields[enterprise_number]
+      if fields.include?(type)
+        field = fields[type]
+
+        @logger.debug? and @logger.debug('Enterprise definition complete', :field => field)
+
+        [field]
+      else
+        field = []
+        field[0] = uint_field(length, 4)
+        field[1] = ('enterprise_field_'+(type & 0xFFF).to_s).to_sym
+
+        @logger.debug? and @logger.debug('Unknown enterprise field definition complete', :field => field)
+
+        [field]
+      end
+    else
+      @logger.warn('Unknown enterprise number', :type => type, :length => length, :enterprise_number => enterprise_number)
+      field = []
+      field[0] = uint_field(length, 4)
+      field[1] = ('enterprise_field_'+type.to_s).to_sym
+
+      @logger.debug? and @logger.debug('Unknown enterprise definition complete', :field => field)
+
+      [field]
+    end
+  end # def enterprise_field_for
 end # class LogStash::Codecs::IPFIX
 

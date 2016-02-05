@@ -85,15 +85,23 @@ class OptionFlowset < BinData::Record
   endian :big
   array  :templates, :read_until => lambda { set_length_in_bytes - 4 - array.num_bytes <= 2 } do
     uint16 :template_id
-    uint16 :scope_length
-    uint16 :option_length
-    array  :scope_fields, :initial_length => lambda { scope_length / 4 } do
+    uint16 :field_count
+    uint16 :scope_field_count
+    array  :scope_fields, :initial_length => lambda { scope_field_count / 4 } do
       uint16 :field_type
       uint16 :field_length
+      choice :information_element, :selection => lambda { (field_type & 0x8000) == 0x8000 } do
+        IANAField false
+        EnterpriseField   true
+      end
     end
-    array  :option_fields, :initial_length => lambda { option_length / 4 } do
+    array  :option_fields, :initial_length => lambda { (field_count - scope_field_count) / 4 } do
       uint16 :field_type
       uint16 :field_length
+      choice :information_element, :selection => lambda { (field_type & 0x8000) == 0x8000 } do
+        IANAField false
+        EnterpriseField   true
+      end
     end
   end
   skip   :length => lambda { templates.length.odd? ? 2 : 0 }
