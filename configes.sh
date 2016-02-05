@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 curl -XPUT localhost:9200/_template/logstash_ipfix -d '{
-    "template" : "logstash-ipfix3-*",
+    "template" : "logstash-ipfix-*",
     "settings": {
       "index.refresh_interval": "5s"
     },
@@ -53,7 +53,7 @@ sudo /opt/logstash/bin/plugin uninstall logstash-codec-ipfix
 /opt/logstash$ sudo bin/logstash -f /etc/logstash/conf.d/logstash-ipfix.conf --debug
 
 
-
+-----------------------------------------------------------------------------
 input {
   udp {
     port => 4739
@@ -68,3 +68,41 @@ output {
     hosts => ["localhost:9200"]
   }
 }
+-----------------------------------------------------------------------------
+input {
+  udp {
+    port => 2055
+    codec => ipfix {
+      definitions => "/opt/logstash/enterprise.yaml"
+    }
+  }
+}
+
+output {
+  elasticsearch {
+    index => "logstash-ipfix-%{+YYYY.MM.dd}"
+    hosts => ["localhost:9200"]
+  }
+}
+-----------------------------------------------------------------------------
+
+[mrichards@localhost dev]$ pwd
+/opt/tv/scenarios/dev
+
+sudo /usr/local/bin/devicemultiplier --input=pcaps/tfqueryv10.pcap --dst=192.168.0.51 --num_devices=1 --start_address=192.168.0.52 --rate=10
+
+DeviceMultiplier Version 2.62
+--input=pcaps/tfqueryv10.pcap
+--dst=192.168.0.51
+--num_devices=1
+--start_address=192.168.0.52
+--rate=10
+
+Number of devices: 1
+Export rate per device: 10.000 pkts/sec
+Number of plays: Continual
+Starting at device 3232235572
+Using consecutive sequence numbers.
+Not printing 'nosleeps'
+
+Steady rate inter-packet interval: 100000.000 microseconds

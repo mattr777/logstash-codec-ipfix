@@ -13,23 +13,27 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
   # Specify into what field you want the IPFIX data.
   config :target, :validate => :string, :default => 'ipfix'
 
-  # Override YAML file containing IPFIX information elements
-  # See <http://www.iana.org/assignments/ipfix/ipfix.xhtml> for IANA definitions
+  # Add enterprise field definitions
+  # See <https://tools.ietf.org/html/rfc7011#section-3.2> for Field Specifier Format
+  # See <https://www.iana.org/assignments/enterprise-numbers/enterprise-numbers> for Private Enterprise Numbers
   #
-  # Each field is defined like so:
+  # Enterprise fields are defined in the YAML file like so:
   #
-  #    ---
-  #    id:
-  #    - default length in bytes
-  #    - :name
-  #    id:
-  #    - :uintN or :ip4_addr or :ip6_addr or :mac_addr or :string
-  #    - :name
-  #    id:
-  #    - :skip
-  #
-  # See <https://github.com/logstash-plugins/logstash-codec-netflow/blob/master/lib/logstash/codecs/netflow/netflow.yaml> for the base set.
-  # config :definitions, :validate => :path, :default => 'enterprise.yaml'
+  # ---
+  # 1246:
+  #   10:
+  #   - :uint32
+  #   - :application_id
+  #   17:
+  #   - :uint32
+  #   - :client_site
+  #   18:
+  #   - :uint32
+  #   - :server_site
+  #   30:
+  #   - :uint8
+  #   - :server_indicator
+  config :definitions, :validate => :path
 
   IPFIX10_FIELDS = %w{ export_time sequence_number observation_domain_id }
 
@@ -52,18 +56,16 @@ class LogStash::Codecs::IPFIX < LogStash::Codecs::Base
       raise "#{self.class.name}: Bad syntax in definitions file #{filename}: " + e.message
     end
 
-    efilename = ::File.expand_path('IPFIX/enterprise.yaml', ::File.dirname(__FILE__))
-
-    # Allow the user to augment/override/rename the supported fields
-    # if @definitions
-    #   raise "#{self.class.name}: definitions file #{@definitions} does not exist" unless File.exists?(@definitions)
-    begin
-      @enterprise_fields = YAML.load_file(efilename)
-      @logger.debug? and @logger.debug('Enterprise fields: ', @enterprise_fields)
-    rescue Exception => e
-      raise "#{self.class.name}: Bad syntax in definitions file #{efilename}: " + e.message
+    # Allow the user to supply enterprise fields
+    if @definitions
+      raise "#{self.class.name}: definitions file #{@definitions} does not exist" unless File.exists?(@definitions)
+      begin
+        @enterprise_fields = YAML.load_file(@definitions)
+        @logger.debug? and @logger.debug('Enterprise fields: ', @enterprise_fields)
+      rescue Exception => e
+        raise "#{self.class.name}: Bad syntax in definitions file #{@definitions}: " + e.message
+      end
     end
-    # end
   end # def register
 
   public
