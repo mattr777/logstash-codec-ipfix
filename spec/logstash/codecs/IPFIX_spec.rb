@@ -5,7 +5,7 @@ describe Logstash::Codec::IPFIX do
     expect(Logstash::Codec::IPFIX::VERSION).not_to be nil
   end
 
-  it 'does something useful' do
-    expect(false).to eq(true)
-  end
+  # it 'does something useful' do
+  #   expect(false).to eq(true)
+  # end
 end

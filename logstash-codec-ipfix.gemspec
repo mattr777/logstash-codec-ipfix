@@ -7,12 +7,11 @@ Gem::Specification.new do |spec|
   spec.name          = 'logstash-codec-ipfix'
   spec.version       = Logstash::Codec::IPFIX::VERSION
   spec.authors       = ['Matt Richards']
-  spec.email         = ['yo@richards777.com']
+  spec.email         = ['rubygems@richards777.com']
 
   spec.summary       = %q{The IPFIX codec decodes IPFIX version 10 flows.}
   spec.description   = %q{This codec was developed using the example of the netflow codec, which decodes v5 and v9 flows.}
-  spec.homepage      = 'http://www.richards777.com'
-  spec.license       = 'MIT'
+  spec.license       = 'Apache License (2.0)'
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
@@ -36,5 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_runtime_dependency 'logstash-core', '>= 2.1.0', '< 3.0.0'
   spec.add_runtime_dependency 'bindata', '>= 2.1', '< 3.0'
-  spec.add_development_dependency 'logstash-devutils', '~> 0.0.18'
+  spec.add_development_dependency 'logstash-devutils', '~> 0.0', '>= 0.0.18'
 end
